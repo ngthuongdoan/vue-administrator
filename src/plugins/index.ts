@@ -1,3 +1,3 @@
-import vuetify from './vuetify';
+import vuetify from "./vuetify";
 
 export { vuetify };

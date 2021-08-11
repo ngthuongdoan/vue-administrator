@@ -35,18 +35,18 @@
 
     <v-main>
       <router-view />
+      <UserInfo></UserInfo>
     </v-main>
   </v-app>
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-
-export default Vue.extend({
-  name: "App",
-
-  data: () => ({
-    //
-  }),
-});
+import { Component, Vue } from "vue-property-decorator";
+import UserInfo from "@/components/UserInfo.vue";
+@Component({
+  components: {
+    UserInfo,
+  },
+})
+export default class App extends Vue {}
 </script>
