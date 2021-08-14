@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const { notEmpty } = require('../utils.js')
 
 module.exports = {
