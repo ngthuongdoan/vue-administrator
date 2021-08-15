@@ -1,5 +1,5 @@
 <template>
-  <v-navigation-drawer dark permanent expand-on-hover>
+  <v-navigation-drawer app dark permanent expand-on-hover>
     <v-list nav dense>
       <v-list-item
         v-for="item in menu"
@@ -39,15 +39,17 @@
   </v-navigation-drawer>
 </template>
 
-<script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
-import { menu as commonMenu } from '@/common/menu';
-import { sidebarFunctions as commonSideBarFunctions } from '@/common/sidebarFunctions';
-@Component
-export default class SideBar extends Vue {
-  private menu = commonMenu;
-  private sidebarFunctions = commonSideBarFunctions;
-}
+<script>
+import { menu } from '@/common/menu';
+import { sidebarFunctions } from '@/common/sidebarFunctions';
+export default {
+  data() {
+    return {
+      menu,
+      sidebarFunctions,
+    };
+  },
+};
 </script>
 
 <style></style>

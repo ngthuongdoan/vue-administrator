@@ -25,8 +25,8 @@ export const menu = [
     icon: 'mdi-account-group',
   },
   {
-    name: 'Promotion',
-    path: 'promotion',
+    name: 'Promotions',
+    path: 'promotions',
     icon: 'mdi-ticket-percent',
   },
   {

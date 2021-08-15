@@ -2,13 +2,12 @@
   <DefaultLayout></DefaultLayout>
 </template>
 
-<script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+<script>
 import DefaultLayout from '@/layouts/default.vue';
-@Component({
+
+export default {
   components: {
     DefaultLayout,
   },
-})
-export default class App extends Vue {}
+};
 </script>
