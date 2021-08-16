@@ -1,83 +1,148 @@
 <template>
   <div>
-    <a-table :columns="columns" :data-source="data">
-      <a slot="name" slot-scope="text">{{ text }}</a>
+    <a-button
+      type="primary"
+      icon="plus"
+      @click="handleAdd"
+      class="flex items-center mb-2"
+    >
+      Add
+    </a-button>
+    <a-table
+      :columns="columns"
+      :data-source="data"
+      :pagination="{ pageSize: 5 }"
+      bordered
+    >
+      <!-- Render basic data -->
+      <template
+        v-for="col in ['name', 'age', 'address']"
+        :slot="col"
+        slot-scope="text, record"
+      >
+        <div :key="col">
+          <a-input
+            v-if="record.editable"
+            style="margin: -5px 0"
+            :value="text"
+            @change="(e) => handleChange(e.target.value, record.key, col)"
+          />
+          <!-- Render data with no edit -->
+          <template v-else>
+            {{ text }}
+          </template>
+        </div>
+      </template>
+      <template slot="operation" slot-scope="text, record">
+        <div class="editable-row-operations">
+          <!-- Render pop up confirm -->
+          <span v-if="record.editable">
+            <a @click="() => save(record.key)">Save</a>
+            <a-popconfirm
+              title="Sure to cancel?"
+              @confirm="() => cancel(record.key)"
+            >
+              <a>Cancel</a>
+            </a-popconfirm>
+          </span>
+          <span v-else>
+            <a
+              class="text-blue-500"
+              :disabled="editingKey !== ''"
+              @click="() => edit(record.key)"
+              >Edit</a
+            >
+          </span>
+        </div>
+      </template>
     </a-table>
   </div>
 </template>
-
 <script>
 const columns = [
   {
     title: 'Name',
     dataIndex: 'name',
-    key: 'name',
     scopedSlots: { customRender: 'name' },
   },
   {
-    title: 'Age',
-    dataIndex: 'age',
-    key: 'age',
-    width: 80,
+    title: 'Description',
+    dataIndex: 'description',
+    scopedSlots: { customRender: 'description' },
   },
   {
-    title: 'Address',
-    dataIndex: 'address',
-    key: 'address 1',
-    ellipsis: true,
-  },
-  {
-    title: 'Long Column Long Column Long Column',
-    dataIndex: 'address',
-    key: 'address 2',
-    ellipsis: true,
-  },
-  {
-    title: 'Long Column Long Column',
-    dataIndex: 'address',
-    key: 'address 3',
-    ellipsis: true,
-  },
-  {
-    title: 'Long Column',
-    dataIndex: 'address',
-    key: 'address 4',
-    ellipsis: true,
+    title: 'Operation',
+    dataIndex: 'operation',
+    scopedSlots: { customRender: 'operation' },
   },
 ];
 
-const data = [
-  {
-    key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park, New York No. 1 Lake Park',
-    tags: ['nice', 'developer'],
-  },
-  {
-    key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 2 Lake Park, London No. 2 Lake Park',
-    tags: ['loser'],
-  },
-  {
-    key: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park, Sidney No. 1 Lake Park',
-    tags: ['cool', 'teacher'],
-  },
-];
-
+const data = [];
+for (let i = 0; i < 100; i++) {
+  data.push({
+    key: i.toString(),
+    name: `Edrward ${i}`,
+    Description: '',
+  });
+}
 export default {
   data() {
+    this.cacheData = data.map((item) => ({ ...item }));
     return {
       data,
       columns,
+      editingKey: '',
     };
+  },
+  methods: {
+    handleChange(value, key, column) {
+      const newData = [...this.data];
+      const target = newData.filter((item) => key === item.key)[0];
+      if (target) {
+        target[column] = value;
+        this.data = newData;
+      }
+    },
+    edit(key) {
+      const newData = [...this.data];
+      const target = newData.filter((item) => key === item.key)[0];
+      this.editingKey = key;
+      if (target) {
+        target.editable = true;
+        this.data = newData;
+      }
+    },
+    save(key) {
+      const newData = [...this.data];
+      const newCacheData = [...this.cacheData];
+      const target = newData.filter((item) => key === item.key)[0];
+      const targetCache = newCacheData.filter((item) => key === item.key)[0];
+      if (target && targetCache) {
+        delete target.editable;
+        this.data = newData;
+        Object.assign(targetCache, target);
+        this.cacheData = newCacheData;
+      }
+      this.editingKey = '';
+    },
+    cancel(key) {
+      const newData = [...this.data];
+      const target = newData.filter((item) => key === item.key)[0];
+      this.editingKey = '';
+      if (target) {
+        Object.assign(
+          target,
+          this.cacheData.filter((item) => key === item.key)[0]
+        );
+        delete target.editable;
+        this.data = newData;
+      }
+    },
   },
 };
 </script>
-
-<style></style>
+<style scoped>
+.editable-row-operations a {
+  margin-right: 8px;
+}
+</style>

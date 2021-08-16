@@ -1,24 +1,14 @@
 <template>
-  <a-layout-header
-    class="flex items-center"
-    style="background: #fff; padding: 0"
-  >
+  <a-layout-header class="p-0 bg-white flex items-center">
     <a-icon
       class="trigger"
       :type="collapsed ? 'menu-unfold' : 'menu-fold'"
       @click="$emit('toggle')"
     />
     <a-breadcrumb>
-      <a-breadcrumb-item>
-        <router-link to="/">
-          <a-icon type="home" />
-        </router-link>
-      </a-breadcrumb-item>
-      <a-breadcrumb-item>
-        <router-link to="/category">
-          <span>Category</span>
-        </router-link>
-      </a-breadcrumb-item>
+      <a-breadcrumb-item>Home</a-breadcrumb-item>
+      <a-breadcrumb-item><a href="">Application Center</a></a-breadcrumb-item>
+      <a-breadcrumb-item>An Application</a-breadcrumb-item>
     </a-breadcrumb>
   </a-layout-header>
 </template>
