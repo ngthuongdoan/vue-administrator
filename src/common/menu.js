@@ -2,36 +2,36 @@ export const menu = [
   {
     name: 'Dashboard',
     path: 'dashboard',
-    icon: 'mdi-view-dashboard',
+    icon: 'icon-dashboard',
   },
   {
     name: 'Category',
     path: 'category',
-    icon: 'mdi-shape',
+    icon: 'icon-category',
   },
   {
     name: 'Products',
     path: 'products',
-    icon: 'mdi-tshirt-crew',
+    icon: 'icon-clothes',
   },
   {
     name: 'Posts',
     path: 'posts',
-    icon: 'mdi-newspaper-variant-multiple',
+    icon: 'icon-article',
   },
   {
     name: 'Users',
     path: 'users',
-    icon: 'mdi-account-group',
+    icon: 'icon-user',
   },
   {
     name: 'Promotions',
     path: 'promotions',
-    icon: 'mdi-ticket-percent',
+    icon: 'icon-BIG_PROMOTION',
   },
   {
     name: 'Analytics',
     path: 'analytics',
-    icon: 'mdi-poll',
+    icon: 'icon-Poll',
   },
 ];

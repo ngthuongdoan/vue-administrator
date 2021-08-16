@@ -1,12 +1,26 @@
 <template>
-  <v-app-bar app dense>
-    <v-breadcrumbs :items="items"></v-breadcrumbs>
-    <v-spacer></v-spacer>
-    <v-btn plain>
-      <v-icon left>mdi-account-settings</v-icon>
-      Admin
-    </v-btn>
-  </v-app-bar>
+  <a-layout-header
+    class="flex items-center"
+    style="background: #fff; padding: 0"
+  >
+    <a-icon
+      class="trigger"
+      :type="collapsed ? 'menu-unfold' : 'menu-fold'"
+      @click="$emit('toggle')"
+    />
+    <a-breadcrumb>
+      <a-breadcrumb-item>
+        <router-link to="/">
+          <a-icon type="home" />
+        </router-link>
+      </a-breadcrumb-item>
+      <a-breadcrumb-item>
+        <router-link to="/category">
+          <span>Category</span>
+        </router-link>
+      </a-breadcrumb-item>
+    </a-breadcrumb>
+  </a-layout-header>
 </template>
 
 <script>
