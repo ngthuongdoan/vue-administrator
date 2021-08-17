@@ -1,11 +1,15 @@
 <template>
   <div>
-    <a-button
-      type="primary"
-      icon="plus"
-      @click="handleAdd"
-      class="flex items-center mb-2"
+    <a-modal
+      title="Title"
+      :visible="visible"
+      :confirm-loading="confirmLoading"
+      @ok="handleOk"
+      @cancel="handleCancel"
     >
+      <p>{{ ModalText }}</p>
+    </a-modal>
+    <a-button type="primary" icon="plus" class="button mb-2" @click="showModal">
       Add
     </a-button>
     <a-table
@@ -23,8 +27,8 @@
         <div :key="col">
           <a-input
             v-if="record.editable"
-            style="margin: -5px 0"
             :value="text"
+            class="w-fit my-1"
             @change="(e) => handleChange(e.target.value, record.key, col)"
           />
           <!-- Render data with no edit -->
@@ -36,22 +40,23 @@
       <template slot="operation" slot-scope="text, record">
         <div class="editable-row-operations">
           <!-- Render pop up confirm -->
-          <span v-if="record.editable">
-            <a @click="() => save(record.key)">Save</a>
-            <a-popconfirm
-              title="Sure to cancel?"
-              @confirm="() => cancel(record.key)"
-            >
-              <a>Cancel</a>
-            </a-popconfirm>
-          </span>
+          <ConfirmPopup
+            v-if="record.editable"
+            :record="record"
+            @save="save"
+            @cancel="cancel"
+          ></ConfirmPopup>
           <span v-else>
-            <a
-              class="text-blue-500"
+            <a-button
+              type="primary"
+              class="button"
+              icon="edit"
+              size="small"
               :disabled="editingKey !== ''"
               @click="() => edit(record.key)"
-              >Edit</a
             >
+              Edit
+            </a-button>
           </span>
         </div>
       </template>
@@ -59,90 +64,38 @@
   </div>
 </template>
 <script>
-const columns = [
-  {
-    title: 'Name',
-    dataIndex: 'name',
-    scopedSlots: { customRender: 'name' },
-  },
-  {
-    title: 'Description',
-    dataIndex: 'description',
-    scopedSlots: { customRender: 'description' },
-  },
-  {
-    title: 'Operation',
-    dataIndex: 'operation',
-    scopedSlots: { customRender: 'operation' },
-  },
-];
-
-const data = [];
-for (let i = 0; i < 100; i++) {
-  data.push({
-    key: i.toString(),
-    name: `Edrward ${i}`,
-    Description: '',
-  });
-}
+import tableMixin from '@/mixins/table';
+import modalMixin from '@/mixins/modal';
 export default {
-  data() {
-    this.cacheData = data.map((item) => ({ ...item }));
-    return {
-      data,
-      columns,
-      editingKey: '',
-    };
-  },
-  methods: {
-    handleChange(value, key, column) {
-      const newData = [...this.data];
-      const target = newData.filter((item) => key === item.key)[0];
-      if (target) {
-        target[column] = value;
-        this.data = newData;
-      }
-    },
-    edit(key) {
-      const newData = [...this.data];
-      const target = newData.filter((item) => key === item.key)[0];
-      this.editingKey = key;
-      if (target) {
-        target.editable = true;
-        this.data = newData;
-      }
-    },
-    save(key) {
-      const newData = [...this.data];
-      const newCacheData = [...this.cacheData];
-      const target = newData.filter((item) => key === item.key)[0];
-      const targetCache = newCacheData.filter((item) => key === item.key)[0];
-      if (target && targetCache) {
-        delete target.editable;
-        this.data = newData;
-        Object.assign(targetCache, target);
-        this.cacheData = newCacheData;
-      }
-      this.editingKey = '';
-    },
-    cancel(key) {
-      const newData = [...this.data];
-      const target = newData.filter((item) => key === item.key)[0];
-      this.editingKey = '';
-      if (target) {
-        Object.assign(
-          target,
-          this.cacheData.filter((item) => key === item.key)[0]
-        );
-        delete target.editable;
-        this.data = newData;
-      }
-    },
+  mixins: [tableMixin, modalMixin],
+  mounted() {
+    this.columns = [
+      {
+        title: 'Name',
+        dataIndex: 'name',
+        scopedSlots: { customRender: 'name' },
+      },
+      {
+        title: 'Description',
+        dataIndex: 'description',
+        scopedSlots: { customRender: 'description' },
+      },
+      {
+        title: 'Operation',
+        dataIndex: 'operation',
+        scopedSlots: { customRender: 'operation' },
+      },
+    ];
+
+    this.data = [];
+    for (let i = 0; i < 100; i++) {
+      this.data.push({
+        key: i.toString(),
+        name: `Edrward ${i}`,
+        Description: '',
+      });
+    }
+    this.cacheData = this.data.map((item) => ({ ...item }));
   },
 };
 </script>
-<style scoped>
-.editable-row-operations a {
-  margin-right: 8px;
-}
-</style>

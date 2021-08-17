@@ -7,6 +7,7 @@ const routes = [
   {
     path: '/',
     component: () => import('@/views/dashboard/index.vue'),
+    name: 'Dashboard',
     meta: {
       middleware: [auth],
     },
@@ -14,6 +15,7 @@ const routes = [
   {
     path: '/analytics',
     component: () => import('@/views/analytics/index.vue'),
+    name: 'Analytics',
     meta: {
       middleware: [auth],
     },
@@ -21,6 +23,7 @@ const routes = [
   {
     path: '/category',
     component: () => import('@/views/category/index.vue'),
+    name: 'Category',
     meta: {
       middleware: [auth],
     },
@@ -28,6 +31,7 @@ const routes = [
   {
     path: '/posts',
     component: () => import('@/views/posts/index.vue'),
+    name: 'Posts',
     meta: {
       middleware: [auth],
     },
@@ -35,6 +39,7 @@ const routes = [
   {
     path: '/products',
     component: () => import('@/views/products/index.vue'),
+    name: 'Products',
     meta: {
       middleware: [auth],
     },
@@ -42,6 +47,7 @@ const routes = [
   {
     path: '/promotions',
     component: () => import('@/views/promotions/index.vue'),
+    name: 'Promotions',
     meta: {
       middleware: [auth],
     },
@@ -49,6 +55,7 @@ const routes = [
   {
     path: '/users',
     component: () => import('@/views/users/index.vue'),
+    name: 'Users',
     meta: {
       middleware: [auth],
     },
