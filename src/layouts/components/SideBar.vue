@@ -1,6 +1,5 @@
 <template>
   <a-layout-sider v-model="collapsed" :trigger="null" collapsible>
-    <div class="logo" />
     <a-menu theme="dark" mode="inline" :default-selected-keys="['1']">
       <a-menu-item v-for="(item, index) in menu" :key="index">
         <router-link :to="item.path" class="flex items-center">

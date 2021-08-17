@@ -1,20 +1,29 @@
 <template>
-  <a-layout-header class="p-0 bg-white flex items-center">
+  <a-layout-header class="p-0 bg-white flex items-center" title="Title">
     <a-icon
-      class="trigger"
+      class="
+        text-base
+        leading-10
+        pl-6
+        transition-colors
+        duration-300
+        hover:text-trigger
+      "
       :type="collapsed ? 'menu-unfold' : 'menu-fold'"
       @click="$emit('toggle')"
     />
-    <a-breadcrumb>
-      <a-breadcrumb-item>Home</a-breadcrumb-item>
-      <a-breadcrumb-item><a href="">Application Center</a></a-breadcrumb-item>
-      <a-breadcrumb-item>An Application</a-breadcrumb-item>
-    </a-breadcrumb>
+    <a-page-header :title="title" />
   </a-layout-header>
 </template>
 
 <script>
 export default {
+  props: {
+    collapsed: {
+      type: Boolean,
+      required: true,
+    },
+  },
   data() {
     return {
       items: [
@@ -35,6 +44,11 @@ export default {
         },
       ],
     };
+  },
+  computed: {
+    title() {
+      return this.$route.name;
+    },
   },
 };
 </script>
