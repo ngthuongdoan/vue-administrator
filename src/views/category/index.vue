@@ -4,10 +4,10 @@
       title="Title"
       :visible="visible"
       :confirm-loading="confirmLoading"
-      @ok="handleOk"
-      @cancel="handleCancel"
+      @ok="addCategory"
+      @cancel="closeModal"
     >
-      <p>{{ ModalText }}</p>
+      <TheForm></TheForm>
     </a-modal>
     <a-button type="primary" icon="plus" class="button mb-2" @click="showModal">
       Add
@@ -15,12 +15,12 @@
     <a-table
       :columns="columns"
       :data-source="data"
-      :pagination="{ pageSize: 5 }"
+      :pagination="{ pageSize: 7 }"
       bordered
     >
       <!-- Render basic data -->
       <template
-        v-for="col in ['name', 'age', 'address']"
+        v-for="col in ['name', 'description']"
         :slot="col"
         slot-scope="text, record"
       >
@@ -33,7 +33,7 @@
           />
           <!-- Render data with no edit -->
           <template v-else>
-            {{ text }}
+            <span class="capitalize">{{ text }}</span>
           </template>
         </div>
       </template>
@@ -66,9 +66,17 @@
 <script>
 import tableMixin from '@/mixins/table';
 import modalMixin from '@/mixins/modal';
+import TheForm from '@/components/TheForm.vue';
+import { getAllCategory } from '@/api/category';
 export default {
+  components: { TheForm },
   mixins: [tableMixin, modalMixin],
-  mounted() {
+  methods: {
+    addCategory() {
+      this.closeModal();
+    },
+  },
+  async mounted() {
     this.columns = [
       {
         title: 'Name',
@@ -87,14 +95,7 @@ export default {
       },
     ];
 
-    this.data = [];
-    for (let i = 0; i < 100; i++) {
-      this.data.push({
-        key: i.toString(),
-        name: `Edrward ${i}`,
-        Description: '',
-      });
-    }
+    this.data = await getAllCategory();
     this.cacheData = this.data.map((item) => ({ ...item }));
   },
 };
