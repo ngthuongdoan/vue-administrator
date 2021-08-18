@@ -16,6 +16,7 @@
       :columns="columns"
       :data-source="data"
       :pagination="{ pageSize: 7 }"
+      rowKey="id"
       bordered
     >
       <!-- Render basic data -->
@@ -29,7 +30,7 @@
             v-if="record.editable"
             :value="text"
             class="w-fit my-1"
-            @change="(e) => handleChange(e.target.value, record.key, col)"
+            @change="(e) => handleChange(e.target.value, record.id, col)"
           />
           <!-- Render data with no edit -->
           <template v-else>
@@ -38,13 +39,13 @@
         </div>
       </template>
       <template slot="operation" slot-scope="text, record">
-        <div class="editable-row-operations">
+        <div>
           <!-- Render pop up confirm -->
           <ConfirmPopup
             v-if="record.editable"
             :record="record"
-            @save="save"
-            @cancel="cancel"
+            @save="saveEdit(record.id)"
+            @cancel="cancel(record.id)"
           ></ConfirmPopup>
           <span v-else>
             <a-button
@@ -53,7 +54,7 @@
               icon="edit"
               size="small"
               :disabled="editingKey !== ''"
-              @click="() => edit(record.key)"
+              @click="() => edit(record.id)"
             >
               Edit
             </a-button>
@@ -67,13 +68,19 @@
 import tableMixin from '@/mixins/table';
 import modalMixin from '@/mixins/modal';
 import TheForm from '@/components/TheForm.vue';
-import { getAllCategory } from '@/api/category';
+import { getAllCategory, updateCategory } from '@/api/category';
 export default {
   components: { TheForm },
   mixins: [tableMixin, modalMixin],
   methods: {
     addCategory() {
       this.closeModal();
+    },
+    async saveEdit(id) {
+      this.save(id, async (id, data) => {
+        await updateCategory(id, data);
+      });
+      this.data = await getAllCategory();
     },
   },
   async mounted() {

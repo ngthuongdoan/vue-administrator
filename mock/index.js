@@ -1,5 +1,6 @@
 const category = require('./routes/category');
-module.exports = () => {
-  const data = { category };
-  return data;
-};
+const user = require('./routes/user');
+module.exports = () => ({
+  category,
+  user,
+});

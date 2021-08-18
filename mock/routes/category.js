@@ -1,4 +1,4 @@
-const generateId = require('../utils');
+const { generateId } = require('../utils');
 
 module.exports = [
   {
@@ -34,11 +34,6 @@ module.exports = [
   {
     id: generateId(),
     name: 'social',
-    description: '',
-  },
-  {
-    id: generateId(),
-    name: 'shirt',
     description: '',
   },
 ];

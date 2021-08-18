@@ -10,4 +10,9 @@ const generateId = () => {
   );
 };
 
-module.exports = generateId;
+const role = {
+  ADMIN: 'admin',
+  DEFAULT: 'default',
+};
+
+module.exports = { generateId, role };
