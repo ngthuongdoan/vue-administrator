@@ -1,7 +1,6 @@
 import { ref } from '@vue/composition-api';
 
 export default function (data) {
-  let cacheData = ref([]);
   let editingKey = ref('');
 
   const handleChange = (value, id, column) => {
@@ -43,5 +42,5 @@ export default function (data) {
     }
   };
 
-  return { cacheData, editingKey, handleChange, edit, save, cancel };
+  return { editingKey, handleChange, edit, save, cancel };
 }
