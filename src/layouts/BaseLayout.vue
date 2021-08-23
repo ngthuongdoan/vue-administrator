@@ -53,27 +53,25 @@
         </div>
       </template>
       <template slot="operation" slot-scope="text, record">
-        <div>
-          <!-- Render pop up confirm -->
-          <ConfirmPopup
-            v-if="record.editable"
-            :record="record"
-            @save="saveEdit(record.id)"
-            @cancel="cancel(record.id)"
-          ></ConfirmPopup>
-          <span v-else>
-            <a-button
-              type="primary"
-              class="button"
-              icon="edit"
-              size="small"
-              :disabled="editingKey !== ''"
-              @click="() => edit(record.id)"
-            >
-              Edit
-            </a-button>
-          </span>
-        </div>
+        <!-- Render pop up confirm -->
+        <ConfirmPopup
+          v-if="record.editable"
+          :record="record"
+          @save="saveEdit(record.id)"
+          @cancel="cancel(record.id)"
+        ></ConfirmPopup>
+        <span v-else>
+          <a-button
+            type="primary"
+            class="button"
+            icon="edit"
+            size="small"
+            :disabled="editingKey !== ''"
+            @click="edit(record.id)"
+          >
+            Edit
+          </a-button>
+        </span>
       </template>
     </a-table>
   </div>
@@ -81,20 +79,33 @@
 <script>
 import useTable from '@/services/table';
 import useModal from '@/services/modal';
+import useError from '@/services/error';
 import ConfirmPopup from '@/components/ConfirmPopup.vue';
+import { ref } from '@vue/composition-api';
 
 export default {
-  props: ['columns', 'data', 'error', 'errorText'],
+  props: ['columns', 'initData'],
   components: { ConfirmPopup },
   setup(props) {
+    // Error
+    const { error, errorText, createError } = useError();
+
     // Table
-    const { cacheData, editingKey, handleChange, edit, save, cancel } =
-      useTable(props.data);
+    let data = ref([]);
+    props
+      .initData()
+      .then((response) => (data.value = response))
+      .catch((error) => createError(error));
 
     const filterColumns = props.columns
       .filter((col) => col.title !== 'Operation')
       .map((col) => col.title.toLowerCase());
 
+    const { editingKey, handleChange, edit, save, cancel } = useTable(data);
+
+    const saveEdit = (id) => {
+      save(id);
+    };
     // Modal
     const { visible, confirmLoading, showModal, closeModal } = useModal();
     const add = () => {
@@ -102,18 +113,23 @@ export default {
     };
 
     return {
-      add,
+      //Error
+      error,
+      errorText,
+      //Table
+      data,
+      filterColumns,
+      editingKey,
+      handleChange,
+      edit,
+      saveEdit,
+      cancel,
+      //Modal
       visible,
       confirmLoading,
       showModal,
       closeModal,
-      filterColumns,
-      cacheData,
-      editingKey,
-      handleChange,
-      edit,
-      save,
-      cancel,
+      add,
     };
   },
 };

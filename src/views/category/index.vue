@@ -1,10 +1,5 @@
 <template>
-  <BaseLayout
-    :columns="columns"
-    :data="data"
-    :error="error"
-    :errorText="errorText"
-  >
+  <BaseLayout :columns="columns" :initData="initData">
     <template #add-modal>
       <a-form layout="vertical">
         <a-form-item label="Name">
@@ -20,21 +15,11 @@
 
 <script>
 import BaseLayout from '@/layouts/BaseLayout.vue';
-import useError from '@/services/error';
-import { getAllCategory, updateCategory } from '@/api/category';
-import { ref, onMounted } from '@vue/composition-api';
+import { getAllCategory } from '@/api/category';
+import { ref } from '@vue/composition-api';
 export default {
   components: { BaseLayout },
   setup() {
-    let data = ref([]);
-    const { error, errorText, createError } = useError();
-    onMounted(async () => {
-      try {
-        data.value = await getAllCategory();
-      } catch (e) {
-        createError(e);
-      }
-    });
     const columns = ref([
       {
         title: 'Name',
@@ -53,17 +38,9 @@ export default {
       },
     ]);
 
-    const saveFunction = async (id, data) => {
-      await updateCategory(id, data);
-      data.value = await getAllCategory();
-    };
-
     return {
-      data,
       columns,
-      saveFunction,
-      error,
-      errorText,
+      initData: getAllCategory,
     };
   },
 };

@@ -22,9 +22,6 @@ service.interceptors.request.use(
     return config;
   },
   (error) => {
-    console.log('🚀 ---------------------------------------------');
-    console.log('🚀 ~ file: request.js ~ line 25 ~ error', error);
-    console.log('🚀 ---------------------------------------------');
     // do something with request error
     return Promise.reject(error);
   }
@@ -48,9 +45,6 @@ service.interceptors.response.use(
     return res;
   },
   (error) => {
-    console.log('🚀 ---------------------------------------------');
-    console.log('🚀 ~ file: request.js ~ line 58 ~ error', error);
-    console.log('🚀 ---------------------------------------------');
     return Promise.reject(error);
   }
 );
