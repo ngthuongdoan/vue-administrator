@@ -1,90 +1,41 @@
 <template>
-  <div>
-    <a-modal
-      title="Title"
-      :visible="visible"
-      :confirm-loading="confirmLoading"
-      @ok="addCategory"
-      @cancel="closeModal"
-    >
-      <TheForm></TheForm>
-    </a-modal>
-    <a-button type="primary" icon="plus" class="button mb-2" @click="showModal">
-      Add
-    </a-button>
-    <a-table
-      :columns="columns"
-      :data-source="data"
-      :pagination="{ pageSize: 7 }"
-      rowKey="id"
-      bordered
-    >
-      <!-- Render basic data -->
-      <template
-        v-for="col in ['name', 'description']"
-        :slot="col"
-        slot-scope="text, record"
-      >
-        <div :key="col">
-          <a-input
-            v-if="record.editable"
-            :value="text"
-            class="w-fit my-1"
-            @change="(e) => handleChange(e.target.value, record.id, col)"
-          />
-          <!-- Render data with no edit -->
-          <template v-else>
-            <span class="capitalize">{{ text }}</span>
-          </template>
-        </div>
-      </template>
-      <template slot="operation" slot-scope="text, record">
-        <div>
-          <!-- Render pop up confirm -->
-          <ConfirmPopup
-            v-if="record.editable"
-            :record="record"
-            @save="saveEdit(record.id)"
-            @cancel="cancel(record.id)"
-          ></ConfirmPopup>
-          <span v-else>
-            <a-button
-              type="primary"
-              class="button"
-              icon="edit"
-              size="small"
-              :disabled="editingKey !== ''"
-              @click="() => edit(record.id)"
-            >
-              Edit
-            </a-button>
-          </span>
-        </div>
-      </template>
-    </a-table>
-  </div>
+  <BaseLayout
+    :columns="columns"
+    :data="data"
+    :error="error"
+    :errorText="errorText"
+  >
+    <template #add-modal>
+      <a-form layout="vertical">
+        <a-form-item label="Name">
+          <a-input />
+        </a-form-item>
+        <a-form-item label="Description">
+          <a-input />
+        </a-form-item>
+      </a-form>
+    </template>
+  </BaseLayout>
 </template>
+
 <script>
-import tableMixin from '@/mixins/table';
-import modalMixin from '@/mixins/modal';
-import TheForm from '@/components/TheForm.vue';
+import BaseLayout from '@/layouts/BaseLayout.vue';
+import useError from '@/services/error';
 import { getAllCategory, updateCategory } from '@/api/category';
+import { ref, onMounted } from '@vue/composition-api';
 export default {
-  components: { TheForm },
-  mixins: [tableMixin, modalMixin],
-  methods: {
-    addCategory() {
-      this.closeModal();
-    },
-    async saveEdit(id) {
-      this.save(id, async (id, data) => {
-        await updateCategory(id, data);
-      });
-      this.data = await getAllCategory();
-    },
-  },
-  async mounted() {
-    this.columns = [
+  components: { BaseLayout },
+  setup() {
+    let data = ref([]);
+    const { error, errorText, createError } = useError();
+    onMounted(async () => {
+      try {
+        data.value = await getAllCategory();
+      } catch (e) {
+        createError(e);
+      }
+    });
+    const columns = ref([
       {
         title: 'Name',
         dataIndex: 'name',
@@ -100,10 +51,20 @@ export default {
         dataIndex: 'operation',
         scopedSlots: { customRender: 'operation' },
       },
-    ];
+    ]);
 
-    this.data = await getAllCategory();
-    this.cacheData = this.data.map((item) => ({ ...item }));
+    const saveFunction = async (id, data) => {
+      await updateCategory(id, data);
+      data.value = await getAllCategory();
+    };
+
+    return {
+      data,
+      columns,
+      saveFunction,
+      error,
+      errorText,
+    };
   },
 };
 </script>

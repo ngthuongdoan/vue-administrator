@@ -3,7 +3,7 @@
     <SideBar :collapsed="collapsed"></SideBar>
     <a-layout>
       <AppBar @toggle="collapsed = !collapsed" :collapsed="collapsed"></AppBar>
-      <a-layout-content class="p-6 bg-white overflow-auto">
+      <a-layout-content class="p-6 bg-white overflow-auto scrollbar">
         <router-view></router-view>
       </a-layout-content>
     </a-layout>
