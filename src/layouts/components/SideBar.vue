@@ -23,7 +23,7 @@
 <script>
 import { menu } from '@/common/menu';
 import { sidebarFunctions } from '@/common/sidebarFunctions';
-import { Icon } from 'ant-design-vue';
+import Icon from 'ant-design-vue/lib/icon/index';
 
 const IconFont = Icon.createFromIconfontCN({
   scriptUrl: '//at.alicdn.com/t/font_2746195_kz9og3tdbrr.js',

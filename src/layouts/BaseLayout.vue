@@ -1,7 +1,7 @@
 <template>
   <div>
     <a-modal
-      title="Title"
+      title="Create"
       :visible="visible"
       :confirm-loading="confirmLoading"
       @ok="add"
@@ -52,6 +52,9 @@
           </span>
         </div>
       </template>
+      <template slot="role" slot-scope="text">
+        <a-tag>{{ text }}</a-tag>
+      </template>
       <template slot="operation" slot-scope="text, record">
         <!-- Render pop up confirm -->
         <ConfirmPopup
@@ -97,8 +100,9 @@ export default {
       .then((response) => (data.value = response))
       .catch((error) => createError(error));
 
+    const unvalidFields = ['operation', 'role'];
     const filterColumns = props.columns
-      .filter((col) => col.title !== 'Operation')
+      .filter((col) => !unvalidFields.includes(col.title.toLowerCase()))
       .map((col) => col.title.toLowerCase());
 
     const { editingKey, handleChange, edit, save, cancel } = useTable(data);
