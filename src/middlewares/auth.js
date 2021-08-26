@@ -1,7 +1,10 @@
-export default function auth({ next, router }) {
-  if (!localStorage.getItem('jwt')) {
-    return router.push({ path: 'login' });
-  }
+import store from '../store';
 
-  return next();
+export default function auth({ next, router }) {
+  if (!localStorage.getItem('jwt') && !store.getters['User/getToken']) {
+    return router.push({ path: 'login' });
+  } else {
+    store.commit('User/setToken', localStorage.getItem('jwt'));
+    return next();
+  }
 }
