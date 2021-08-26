@@ -8,7 +8,8 @@
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e",
     "lint": "vue-cli-service lint",
-    "server": "json-server ./mock/index.js",
+    "server": "json-server --watch ./mock/index.js",
+    "server:auth": "node ./mock/index.js",
     "new": "plop"
   },
   "dependencies": {
@@ -26,6 +27,8 @@
     "vuex": "^3.4.0"
   },
   "devDependencies": {
+    "body-parser": "^1.19.0",
+    "jsonwebtoken": "^8.1.0",
     "@vue/cli-plugin-babel": "~4.5.0",
     "@vue/cli-plugin-e2e-cypress": "~4.5.0",
     "@vue/cli-plugin-eslint": "~4.5.0",
