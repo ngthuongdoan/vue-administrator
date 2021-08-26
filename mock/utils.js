@@ -15,4 +15,7 @@ const role = {
   DEFAULT: 'default',
 };
 
-module.exports = { generateId, role };
+const deletePassword = (user) => {
+  delete user.password;
+};
+module.exports = { generateId, role, deletePassword };
