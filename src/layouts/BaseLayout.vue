@@ -4,6 +4,7 @@
       title="Create"
       :visible="visible"
       :confirm-loading="confirmLoading"
+      centered
       @ok="add"
       @cancel="closeModal"
     >
