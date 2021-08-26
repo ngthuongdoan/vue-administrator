@@ -21,7 +21,7 @@
       icon="plus"
       :disabled="error"
       class="button mb-2"
-      @click="showModal"
+      @click="showModal(null)"
     >
       Add
     </a-button>
@@ -34,20 +34,9 @@
       bordered
     >
       <!-- Render basic data -->
-      <template
-        v-for="col in filterColumns"
-        :slot="col"
-        slot-scope="text, record"
-      >
+      <template v-for="col in filterColumns" :slot="col" slot-scope="text">
         <div :key="col">
-          <a-input
-            v-if="record.editable"
-            :value="text"
-            class="w-fit my-1"
-            @change="(e) => handleChange(e.target.value, record.id, col)"
-          />
-          <!-- Render data with no edit -->
-          <span class="capitalize" v-else>
+          <span class="capitalize">
             {{ text }}
           </span>
         </div>
@@ -56,25 +45,15 @@
         <a-tag>{{ text }}</a-tag>
       </template>
       <template slot="operation" slot-scope="text, record">
-        <!-- Render pop up confirm -->
-        <ConfirmPopup
-          v-if="record.editable"
-          :record="record"
-          @save="saveEdit(record.id)"
-          @cancel="cancel(record.id)"
-        ></ConfirmPopup>
-        <span v-else>
-          <a-button
-            type="primary"
-            class="button"
-            icon="edit"
-            size="small"
-            :disabled="editingKey !== ''"
-            @click="edit(record.id)"
-          >
-            Edit
-          </a-button>
-        </span>
+        <a-button
+          type="primary"
+          class="button"
+          icon="edit"
+          size="small"
+          @click="edit(record.id)"
+        >
+          Edit
+        </a-button>
       </template>
     </a-table>
   </div>
@@ -83,15 +62,20 @@
 import useTable from '@/services/table';
 import useModal from '@/services/modal';
 import useError from '@/services/error';
-import ConfirmPopup from '@/components/ConfirmPopup.vue';
 import { ref } from '@vue/composition-api';
 
 export default {
   props: ['columns', 'initData'],
-  components: { ConfirmPopup },
-  setup(props) {
+  setup(props, { emit }) {
     // Error
     const { error, errorText, createError } = useError();
+
+    // Modal
+    const { target, visible, confirmLoading, showModal, closeModal } =
+      useModal(emit);
+    const add = () => {
+      closeModal();
+    };
 
     // Table
     let data = ref([]);
@@ -105,15 +89,10 @@ export default {
       .filter((col) => !unvalidFields.includes(col.title.toLowerCase()))
       .map((col) => col.title.toLowerCase());
 
-    const { editingKey, handleChange, edit, save, cancel } = useTable(data);
+    const { edit, save, cancel } = useTable(data, showModal, closeModal);
 
     const saveEdit = (id) => {
       save(id);
-    };
-    // Modal
-    const { visible, confirmLoading, showModal, closeModal } = useModal();
-    const add = () => {
-      closeModal();
     };
 
     return {
@@ -123,8 +102,6 @@ export default {
       //Table
       data,
       filterColumns,
-      editingKey,
-      handleChange,
       edit,
       saveEdit,
       cancel,
@@ -133,6 +110,7 @@ export default {
       confirmLoading,
       showModal,
       closeModal,
+      target,
       add,
     };
   },

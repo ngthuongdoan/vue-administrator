@@ -1,12 +1,16 @@
 <template>
-  <BaseLayout :columns="columns" :initData="initData">
+  <BaseLayout
+    :columns="columns"
+    :initData="initData"
+    @target="bindTarget($event)"
+  >
     <template #add-modal>
       <a-form layout="vertical">
         <a-form-item label="Name">
-          <a-input />
+          <a-input v-model="target.name" />
         </a-form-item>
         <a-form-item label="Description">
-          <a-input />
+          <a-input v-model="target.description" />
         </a-form-item>
       </a-form>
     </template>
@@ -22,9 +26,16 @@ export default {
   components: { BaseLayout },
   setup() {
     const columns = ref([...category]);
+
+    let target = ref({ name: '', description: '' });
+    const bindTarget = (t) => {
+      target.value = { ...t.value };
+    };
     return {
       columns,
       initData: getAllCategory,
+      bindTarget,
+      target,
     };
   },
 };
