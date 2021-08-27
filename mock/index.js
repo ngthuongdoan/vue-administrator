@@ -13,10 +13,8 @@ server.use(jsonServer.defaults());
 
 const SECRET_KEY = '123456789';
 
-const expiresIn = '1h';
-
 // Create a token from a payload
-function createToken(payload) {
+function createToken(payload, expiresIn = '1h') {
   return jwt.sign(payload, SECRET_KEY, { expiresIn });
 }
 
@@ -27,15 +25,18 @@ function verifyToken(token) {
   );
 }
 
-// Check if the user exists in database
-function isAuthenticated({ username, password }) {
-  return (
-    user.findIndex(
-      (u) => u.username === username && u.password === password
-    ) !== -1
-  );
+function removeToken(payload) {
+  createToken(payload, '-100000');
 }
 
+// Check if the user exists in database
+function isAuthenticated({ username, password }) {
+  return findUser({ username, password }) !== -1;
+}
+
+function findUser({ username, password }) {
+  return user.find((u) => u.username === username && u.password === password);
+}
 // Register New User
 server.post('/auth/register', (req, res) => {
   console.log('register endpoint called; request body:');
@@ -59,9 +60,9 @@ server.post('/auth/register', (req, res) => {
     role,
   });
   // Create token for new user
-  const access_token = createToken({ username, password });
-  console.log('Access Token:' + access_token);
-  res.status(200).json({ token: access_token });
+  const token = createToken({ username, password });
+  const user = findUser({ username, password });
+  res.status(200).json({ token, user });
 });
 
 // Login to one of the users from ./users.json
@@ -75,9 +76,17 @@ server.post('/auth/login', (req, res) => {
     res.status(status).json({ status, message });
     return;
   }
-  const access_token = createToken({ username, password });
-  console.log('Access Token:' + access_token);
-  res.status(200).json({ access_token });
+  const token = createToken({ username, password });
+  const user = findUser({ username, password });
+  res.status(200).json({ token, user });
+});
+
+server.post('/auth/logout', (req, res) => {
+  console.log('logout endpoint called; request body:');
+  console.log(req.body);
+  const { username, password } = req.body;
+  removeToken({ username, password });
+  res.status(200);
 });
 
 server.use(/^(?!\/auth).*$/, (req, res, next) => {
@@ -108,7 +117,7 @@ server.use(/^(?!\/auth).*$/, (req, res, next) => {
   }
 });
 
-server.use(jsonServer.router({ category }));
+server.use(jsonServer.router({ category, user }));
 
 server.listen(8000, () => {
   console.log('Run Auth API Server');

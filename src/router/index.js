@@ -6,67 +6,81 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: '/',
-    component: () => import('@/views/dashboard/index.vue'),
-    name: 'Dashboard',
+    component: () => import('@/views/index/index.vue'),
     meta: {
       middleware: [auth],
     },
+    children: [
+      {
+        path: 'dashboard',
+        name: 'Dashboard',
+        redirect: '/',
+      },
+      {
+        path: 'analytics',
+        component: () => import('@/views/index/analytics/index.vue'),
+        name: 'Analytics',
+        meta: {
+          middleware: [auth],
+        },
+      },
+      {
+        path: 'category',
+        component: () => import('@/views/index/category/index.vue'),
+        name: 'Category',
+        meta: {
+          middleware: [auth],
+        },
+      },
+      {
+        path: 'posts',
+        component: () => import('@/views/index/posts/index.vue'),
+        name: 'Posts',
+        meta: {
+          middleware: [auth],
+        },
+      },
+      {
+        path: 'products',
+        component: () => import('@/views/index/products/index.vue'),
+        name: 'Products',
+        meta: {
+          middleware: [auth],
+        },
+      },
+      {
+        path: 'promotions',
+        component: () => import('@/views/index/promotions/index.vue'),
+        name: 'Promotions',
+        meta: {
+          middleware: [auth],
+        },
+      },
+      {
+        path: 'users',
+        component: () => import('@/views/index/users/index.vue'),
+        name: 'Users',
+        meta: {
+          middleware: [auth],
+        },
+      },
+    ],
   },
   {
-    path: '/analytics',
-    component: () => import('@/views/analytics/index.vue'),
-    name: 'Analytics',
-    meta: {
-      middleware: [auth],
-    },
-  },
-  {
-    path: '/category',
-    component: () => import('@/views/category/index.vue'),
-    name: 'Category',
-    meta: {
-      middleware: [auth],
-    },
-  },
-  {
-    path: '/posts',
-    component: () => import('@/views/posts/index.vue'),
-    name: 'Posts',
-    meta: {
-      middleware: [auth],
-    },
-  },
-  {
-    path: '/products',
-    component: () => import('@/views/products/index.vue'),
-    name: 'Products',
-    meta: {
-      middleware: [auth],
-    },
-  },
-  {
-    path: '/promotions',
-    component: () => import('@/views/promotions/index.vue'),
-    name: 'Promotions',
-    meta: {
-      middleware: [auth],
-    },
-  },
-  {
-    path: '/users',
-    component: () => import('@/views/users/index.vue'),
-    name: 'Users',
-    meta: {
-      middleware: [auth],
-    },
-  },
-  {
-    path: '/login',
-    component: () => import('@/views/login/index.vue'),
-  },
-  {
-    path: '/dashboard',
-    redirect: '/',
+    path: '/auth',
+    component: () => import('@/views/auth/index.vue'),
+    children: [
+      {
+        path: '/login',
+        name: 'Login',
+        component: () => import('@/views/auth/login/index.vue'),
+      },
+      {
+        path: '/register',
+        name: 'Register',
+        component: () => import('@/views/auth/register/index.vue'),
+      },
+    ],
   },
 ];
 

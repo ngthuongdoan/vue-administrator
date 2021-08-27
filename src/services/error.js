@@ -6,11 +6,11 @@ export default function () {
 
   const createError = (e) => {
     error.value = true;
-    errorText.value = e.message;
+    errorText.value = e.response.statusText;
   };
-  const removeError = (e) => {
+  const removeError = () => {
     error.value = false;
-    errorText.value = e.message;
+    errorText.value = '';
   };
   return {
     error,

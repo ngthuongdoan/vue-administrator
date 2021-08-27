@@ -1,10 +1,11 @@
 import store from '../store';
+import { getToken } from '../utils/auth';
 
 export default function auth({ next, router }) {
-  if (!localStorage.getItem('jwt') && !store.getters['User/getToken']) {
-    return router.push({ path: 'login' });
+  if (!getToken() && !store.getters['User/getToken']) {
+    return router.push({ name: 'Login' });
   } else {
-    store.commit('User/setToken', localStorage.getItem('jwt'));
+    store.commit('User/setToken', getToken());
     return next();
   }
 }
