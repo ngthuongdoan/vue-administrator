@@ -38,10 +38,22 @@ const routes = [
       {
         path: 'posts',
         component: () => import('@/views/index/posts/index.vue'),
-        name: 'Posts',
-        meta: {
-          middleware: [auth],
-        },
+        children: [
+          {
+            path: '',
+            component: () => import('@/views/index/posts/all/index.vue'),
+            meta: {
+              middleware: [auth],
+            },
+          },
+          {
+            path: 'add',
+            component: () => import('@/views/index/posts/add/index.vue'),
+            meta: {
+              middleware: [auth],
+            },
+          },
+        ],
       },
       {
         path: 'products',

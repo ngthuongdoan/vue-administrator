@@ -3,6 +3,7 @@ const jsonServer = require('json-server');
 const jwt = require('jsonwebtoken');
 const user = require('./routes/user');
 const category = require('./routes/category');
+const post = require('./routes/post');
 const { generateId } = require('./utils');
 
 const server = jsonServer.create();
@@ -117,7 +118,7 @@ server.use(/^(?!\/auth).*$/, (req, res, next) => {
   }
 });
 
-server.use(jsonServer.router({ category, user }));
+server.use(jsonServer.router({ category, post, user }));
 
 server.listen(8000, () => {
   console.log('Run Auth API Server');

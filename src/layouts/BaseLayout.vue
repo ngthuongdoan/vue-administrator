@@ -22,7 +22,7 @@
       icon="plus"
       :disabled="error"
       class="button mb-2"
-      @click="showModal(null)"
+      @click="addHandler()"
     >
       Add
     </a-button>
@@ -63,11 +63,24 @@
 import useTable from '@/services/table';
 import useModal from '@/services/modal';
 import useError from '@/services/error';
-import { ref } from '@vue/composition-api';
-
+import { ref, computed } from '@vue/composition-api';
+import { useRoute } from '@/router/migrateRouterVue3';
 export default {
-  props: ['columns', 'initData'],
-  setup(props, { emit }) {
+  props: {
+    columns: {
+      type: Array,
+      required: true,
+    },
+    type: {
+      type: String,
+      default: 'modal',
+    },
+    initData: {
+      type: Function,
+      required: true,
+    },
+  },
+  setup(props, { emit, root }) {
     // Error
     const { error, errorText, createError } = useError();
 
@@ -96,6 +109,20 @@ export default {
       save(id);
     };
 
+    //Add Data
+    const addHandler = () => {
+      switch (props.type) {
+        case 'modal':
+          showModal(null);
+          break;
+        case 'blank': {
+          const route = useRoute();
+          const currentPath = computed(() => route.fullPath);
+          root.$router.push(`${currentPath.value}/add`);
+          break;
+        }
+      }
+    };
     return {
       //Error
       error,
@@ -113,6 +140,7 @@ export default {
       closeModal,
       target,
       add,
+      addHandler,
     };
   },
 };
