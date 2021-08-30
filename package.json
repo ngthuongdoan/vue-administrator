@@ -27,8 +27,6 @@
     "vuex": "^3.4.0"
   },
   "devDependencies": {
-    "body-parser": "^1.19.0",
-    "jsonwebtoken": "^8.1.0",
     "@vue/cli-plugin-babel": "~4.5.0",
     "@vue/cli-plugin-e2e-cypress": "~4.5.0",
     "@vue/cli-plugin-eslint": "~4.5.0",
@@ -39,12 +37,14 @@
     "@vue/eslint-config-prettier": "^6.0.0",
     "@vue/test-utils": "^1.0.3",
     "babel-plugin-import": "^1.13.3",
+    "body-parser": "^1.19.0",
     "commitizen": "^4.2.4",
     "cz-conventional-changelog": "3.3.0",
     "eslint": "^6.7.2",
     "eslint-plugin-prettier": "^3.3.1",
     "eslint-plugin-vue": "^6.2.2",
     "json-server": "^0.16.3",
+    "jsonwebtoken": "^8.1.0",
     "node-sass": "^4.12.0",
     "plop": "^2.7.4",
     "prettier": "^2.2.1",

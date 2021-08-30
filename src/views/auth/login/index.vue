@@ -55,11 +55,14 @@
 <script>
 import { ref, watch } from '@vue/composition-api';
 import { login as authLogin } from '@/api/auth';
+import { setToken, removeToken } from '@/utils/auth';
 import { Modal } from 'ant-design-vue';
 
 export default {
   // eslint-disable-next-line no-unused-vars
   setup(props, { root }) {
+    removeToken();
+    root.$store.commit('User/clear');
     let user = ref({ username: '', password: '' });
 
     let seePassword = ref(false);
@@ -71,7 +74,7 @@ export default {
     const login = async () => {
       try {
         const response = await authLogin(user.value);
-        localStorage.setItem('jwt', response.token);
+        setToken(response.token);
         root.$store.commit('User/setData', { ...response.user });
         root.$store.commit('User/setToken', response.token);
         root.$router.push('/');

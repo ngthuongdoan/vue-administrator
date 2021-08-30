@@ -15,6 +15,7 @@ const routes = [
         path: 'dashboard',
         name: 'Dashboard',
         redirect: '/',
+        middleware: [auth],
       },
       {
         path: 'analytics',

@@ -18,6 +18,10 @@ export default {
     setData(state, data) {
       state.data = { ...data };
     },
+    clear() {
+      this.commit('setData', {});
+      this.commit('setToken', '');
+    },
   },
   actions: {},
   namespaced: true,
