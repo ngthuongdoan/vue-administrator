@@ -1,12 +1,18 @@
+import router from '@/router';
+export const setting = () => {};
+export const logout = () => {
+  router.push({ name: 'Login' });
+};
+
 export const sidebarFunctions = [
   {
     name: 'Setting',
-    path: 'setting',
+    handler: 'setting',
     icon: 'icon-Settingscontroloptions',
   },
   {
     name: 'Logout',
-    path: 'logout',
+    handler: 'logout',
     icon: 'icon-logout',
   },
 ];

@@ -1,3 +1,5 @@
+import { logout } from '@/api/auth';
+
 export default {
   state: () => ({
     token: '',
@@ -18,11 +20,13 @@ export default {
     setData(state, data) {
       state.data = { ...data };
     },
-    clear() {
-      this.commit('setData', {});
-      this.commit('setToken', '');
+  },
+  actions: {
+    async clear({ commit }) {
+      commit('setData', {});
+      commit('setToken', '');
+      await logout();
     },
   },
-  actions: {},
   namespaced: true,
 };

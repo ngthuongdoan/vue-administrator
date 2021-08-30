@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import auth from '@/middlewares/auth';
+import ROLE from '@/common/role';
 Vue.use(VueRouter);
 
 const routes = [
@@ -23,6 +24,7 @@ const routes = [
         name: 'Analytics',
         meta: {
           middleware: [auth],
+          role: ROLE.ADMIN,
         },
       },
       {
@@ -63,6 +65,7 @@ const routes = [
         name: 'Users',
         meta: {
           middleware: [auth],
+          role: ROLE.ADMIN,
         },
       },
     ],
@@ -75,11 +78,6 @@ const routes = [
         path: '/login',
         name: 'Login',
         component: () => import('@/views/auth/login/index.vue'),
-      },
-      {
-        path: '/register',
-        name: 'Register',
-        component: () => import('@/views/auth/register/index.vue'),
       },
     ],
   },

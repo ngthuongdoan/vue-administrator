@@ -62,7 +62,7 @@ export default {
   // eslint-disable-next-line no-unused-vars
   setup(props, { root }) {
     removeToken();
-    root.$store.commit('User/clear');
+    root.$store.dispatch('User/clear');
     let user = ref({ username: '', password: '' });
 
     let seePassword = ref(false);
