@@ -1,9 +1,27 @@
 <template>
-  <div>Add Post</div>
+  <Editor
+    :initialValue="editorText"
+    :options="editorOptions"
+    height="500px"
+    initialEditType="markdown"
+    previewStyle="tab"
+    ref="toastuiEditor"
+    class="text-base"
+  />
 </template>
-
 <script>
-export default {};
-</script>
+import editorOptions from '@/common/editorOptions';
+import { Editor } from '@toast-ui/vue-editor';
 
-<style></style>
+export default {
+  components: {
+    Editor,
+  },
+  data() {
+    return {
+      editorText: 'This is initialValue.',
+      editorOptions,
+    };
+  },
+};
+</script>
