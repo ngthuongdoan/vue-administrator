@@ -8,13 +8,13 @@ const routes = [
   {
     path: '/',
     component: () => import('@/views/index/index.vue'),
+    name: 'Dashboard',
     meta: {
       middleware: [auth],
     },
     children: [
       {
         path: 'dashboard',
-        name: 'Dashboard',
         redirect: '/',
         middleware: [auth],
       },
@@ -42,6 +42,7 @@ const routes = [
           {
             path: '',
             component: () => import('@/views/index/posts/all/index.vue'),
+            name: 'All Post',
             meta: {
               middleware: [auth],
             },
@@ -49,6 +50,7 @@ const routes = [
           {
             path: 'add',
             component: () => import('@/views/index/posts/add/index.vue'),
+            name: 'Add Post',
             meta: {
               middleware: [auth],
             },
