@@ -1,5 +1,5 @@
 import store from '../store';
-import { getToken } from '../utils/auth';
+import { currentUser } from '@/api/auth';
 
 const checkLoginRoute = ({ next, to }) => {
   if (to.path === '/login') {
@@ -17,18 +17,10 @@ const checkPermission = ({ next, to }) => {
   return next();
 };
 export default function auth({ next, to }) {
-  const hasToken = getToken();
-
-  if (hasToken) {
-    // Have token on local storage
-    if (store.getters['User/getToken']) {
-      return checkLoginRoute({ next, to });
-    } else {
-      store.commit('User/setToken', hasToken);
-      return checkLoginRoute({ next, to });
-    }
+  const user = currentUser();
+  if (user) {
+    return checkLoginRoute({ next, to });
   } else {
-    // Don't have token on local storage
     return next({ name: 'Login' });
   }
 }

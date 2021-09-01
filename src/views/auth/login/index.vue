@@ -16,8 +16,8 @@
       <a-input
         ref="inputField"
         size="large"
-        v-model="user.username"
-        placeholder="Username"
+        v-model="user.email"
+        placeholder="Email"
       >
         <a-icon slot="prefix" type="user" class="text-base" />
       </a-input>
@@ -54,16 +54,14 @@
 
 <script>
 import { ref, watch } from '@vue/composition-api';
-import { login as authLogin } from '@/api/auth';
-import { setToken, removeToken } from '@/utils/auth';
+import { login as authLogin, logout as authLogout } from '@/api/auth';
 import { Modal } from 'ant-design-vue';
 
 export default {
-  // eslint-disable-next-line no-unused-vars
   setup(props, { root }) {
-    removeToken();
+    authLogout();
     root.$store.dispatch('User/clear');
-    let user = ref({ username: '', password: '' });
+    let user = ref({ email: '', password: '' });
 
     let seePassword = ref(false);
     let passwordType = ref('password');
@@ -74,14 +72,11 @@ export default {
     const login = async () => {
       try {
         const response = await authLogin(user.value);
-        setToken(response.token);
         root.$store.commit('User/setData', { ...response.user });
-        root.$store.commit('User/setToken', response.token);
         root.$router.push('/');
       } catch (e) {
         Modal.error({
           title: 'Something went wrong',
-          content: e.response.statusText,
         });
       }
     };
